@@ -4,6 +4,10 @@ const makeBaseResource = require('../bin/database/postgres/factories/base-resour
 const pool = require('../bin/database/database.config');
 module.exports = async (req, res, next) => {
 	const authHeader = req.headers.authorization;
+	if (!authHeader) {
+		res.status(401).send({ message: 'Token não existe' });
+		return;
+	}
 	const [, token] = authHeader.split(' ');
 	if (token) {
 		try {

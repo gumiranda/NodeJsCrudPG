@@ -1,7 +1,7 @@
 /* eslint-disable new-cap */
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const repository = require('../repositories/user-repository');
+const repository = require('../repositories/location-repository');
 const validation = require('../../../bin/helpers/validation');
 const ctrlBase = require('../../../bin/base/controller-base');
 const variables = require('../../../bin/configuration/variables');
@@ -37,9 +37,7 @@ userController.prototype.post = async (req, res) => {
 		req.body.password = await bcrypt.hashSync(req.body.password, salt);
 		ctrlBase.post(_repo, validationContract, req, res);
 	} catch (e) {
-		res
-			.status(500)
-			.send({ message: 'Internal server error', error: e.toString() });
+		res.status(500).send({ message: 'Internal server error', error: e });
 	}
 };
 userController.prototype.put = async (req, res) => {
@@ -63,9 +61,7 @@ userController.prototype.put = async (req, res) => {
 			res.status(401).send({ message: 'Você não tem permissão' });
 		}
 	} catch (e) {
-		res
-			.status(500)
-			.send({ message: 'Internal server error', error: e.toString() });
+		res.status(500).send({ message: 'Internal server error', error: e });
 	}
 };
 

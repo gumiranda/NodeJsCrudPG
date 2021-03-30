@@ -14,7 +14,9 @@ exports.post = async (repository, validationContract, req, res) => {
 		const resultado = await repository.create(data);
 		res.status(201).send(resultado);
 	} catch (e) {
-		res.status(500).send({ message: 'Internal server error', error: e });
+		res
+			.status(500)
+			.send({ message: 'Internal server error', error: e.toString() });
 	}
 };
 
@@ -34,15 +36,19 @@ exports.put = async (repository, validationContract, req, res) => {
 		const resultado = await repository.update(data, { id: req.params.id });
 		res.status(202).send(resultado);
 	} catch (e) {
-		res.status(500).send({ message: 'Internal server error', error: e });
+		res
+			.status(500)
+			.send({ message: 'Internal server error', error: e.toString() });
 	}
 };
 exports.get = async (repository, req, res) => {
 	try {
-		const resultado = await repository.getAll();
+		const resultado = await repository.get(req.query || {});
 		res.status(200).send(resultado);
-	} catch (erro) {
-		res.status(500).send({ message: 'Erro no processamento', error: erro });
+	} catch (e) {
+		res
+			.status(500)
+			.send({ message: 'Erro no processamento', error: e.toString() });
 	}
 };
 
@@ -60,6 +66,8 @@ exports.delete = async (repository, req, res) => {
 			res.status(500).send({ message: 'O parametro id precisa ser informado' });
 		}
 	} catch (e) {
-		res.status(500).send({ message: 'Internal server error', error: e });
+		res
+			.status(500)
+			.send({ message: 'Internal server error', error: e.toString() });
 	}
 };

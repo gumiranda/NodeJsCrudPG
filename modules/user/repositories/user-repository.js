@@ -7,7 +7,7 @@ class userRepository {
 	}
 
 	async authenticate(email, password) {
-		const users = await this._base.getByAny({ email });
+		const users = await this._base.get({ email });
 		if (!users || !users[0]) {
 			return null;
 		}
@@ -18,7 +18,7 @@ class userRepository {
 	}
 
 	emailExists(email) {
-		return this._base.getByAny({ email });
+		return this._base.get({ email });
 	}
 
 	async create(data) {
@@ -32,11 +32,7 @@ class userRepository {
 		if (!updated) {
 			return null;
 		}
-		return this._base.getByAny(where);
-	}
-
-	getAll() {
-		return this._base.getAll();
+		return this._base.get(where);
 	}
 
 	delete(id) {

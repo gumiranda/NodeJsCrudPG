@@ -14,10 +14,6 @@ class baseRepository {
 		return this._model.update(entity, where, pool);
 	}
 
-	getAll() {
-		return this._model.find({}, pool);
-	}
-
 	delete(id) {
 		return this._model.delete({ id }, pool);
 	}
@@ -30,7 +26,7 @@ class baseRepository {
 		return this._model.getSequence(sequence, pool);
 	}
 
-	getByAny(any) {
+	get(any) {
 		return this._model.find(any, pool);
 	}
 }
