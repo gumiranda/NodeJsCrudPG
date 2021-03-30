@@ -12,7 +12,7 @@ function userController() {}
 
 userController.prototype.post = async (req, res) => {
 	const validationContract = new validation();
-	validationContract.isRequired(req.body.nome, 'Informe seu nome');
+	validationContract.isRequired(req.body.name, 'Informe seu name');
 	validationContract.isRequired(req.body.email, 'Informe seu email');
 	validationContract.isRequired(req.body.password, 'Informe sua password');
 	validationContract.isRequired(
@@ -26,10 +26,10 @@ userController.prototype.post = async (req, res) => {
 	validationContract.isEmail(req.body.email, 'Informe um email válido ');
 
 	try {
-		const usuarioEmailExiste = await _repo.EmailExists(req.body.email);
-		if (usuarioEmailExiste) {
+		const userExists = await _repo.emailExists(req.body.email);
+		if (userExists && userExists[0]) {
 			validationContract.isTrue(
-				usuarioEmailExiste.nome !== undefined,
+				userExists[0].name !== undefined,
 				`Já existe o email ${req.body.email} cadastrado no banco de dados`,
 			);
 		}
@@ -42,30 +42,20 @@ userController.prototype.post = async (req, res) => {
 };
 userController.prototype.put = async (req, res) => {
 	const validationContract = new validation();
-	validationContract.isRequired(req.body.nome, 'Informe seu nome ');
 	validationContract.isRequired(req.params.id, 'Informe seu id ');
-	validationContract.isRequired(req.body.email, 'Informe seu email ');
-	validationContract.isRequired(req.body.password, 'Informe sua password ');
-	validationContract.isRequired(
-		req.body.passwordConfirmation,
-		'Informe sua password confirmação ',
-	);
-	validationContract.isTrue(
-		req.body.passwordConfirmation !== req.body.password,
-		'As passwords devem ser iguais ',
-	);
-	validationContract.isEmail(req.body.email, 'Informe um email válido ');
-
-	try {
-		const usuarioEmailExiste = await _repo.EmailExists(req.body.email);
-		if (usuarioEmailExiste) {
+	if (req.body.email) {
+		validationContract.isEmail(req.body.email, 'Informe um email válido ');
+		const userExists = await _repo.emailExists(req.body.email);
+		if (userExists && userExists[0]) {
 			validationContract.isTrue(
-				usuarioEmailExiste.nome !== undefined &&
-					usuarioEmailExiste._id !== req.params.id,
+				userExists[0].name !== undefined && userExists[0].id !== req.params.id,
 				`Já existe o email ${req.body.email} cadastrado no banco de dados`,
 			);
 		}
-		if (req.userLogged.user._id.toString() === req.params.id) {
+	}
+
+	try {
+		if (req.userLogged.user.id.toString() === req.params.id) {
 			ctrlBase.put(_repo, validationContract, req, res);
 		} else {
 			res.status(401).send({ message: 'Você não tem permissão' });

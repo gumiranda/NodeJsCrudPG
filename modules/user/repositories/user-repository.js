@@ -7,14 +7,17 @@ class userRepository {
 	}
 
 	async authenticate(email, password) {
-		const user = await this._base.getByAny({ email });
-		if (await bcrypt.compareSync(password, user.password)) {
-			return user;
+		const users = await this._base.getByAny({ email });
+		if (!users || !users[0]) {
+			return null;
+		}
+		if (await bcrypt.compareSync(password, users[0].password)) {
+			return users[0];
 		}
 		return null;
 	}
 
-	EmailExists(email) {
+	emailExists(email) {
 		return this._base.getByAny({ email });
 	}
 
@@ -25,7 +28,11 @@ class userRepository {
 	}
 
 	async update(entity, where) {
-		return this._base.update(entity, where);
+		const updated = await this._base.update(entity, where);
+		if (!updated) {
+			return null;
+		}
+		return this._base.getByAny(where);
 	}
 
 	getAll() {

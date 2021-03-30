@@ -3,7 +3,7 @@
 /* eslint-disable no-use-before-define */
 require('dotenv').config();
 const express = require('express');
-// const bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 // const variables = require('./bin/configuration/variables');
 // ROTAS
 const userRouter = require('./modules/user/routes/user-router');
@@ -25,8 +25,8 @@ app.use(function (req, res, next) {
 	);
 	next();
 });
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/api/user', userRouter);
 
