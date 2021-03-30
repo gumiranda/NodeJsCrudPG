@@ -3,8 +3,7 @@ const base = require('../../../bin/base/repository-base');
 
 class userRepository {
 	constructor() {
-		this._base = new base('User');
-		this._projection = 'nome email payDay type cpf phone';
+		this._base = new base('tb_User');
 	}
 
 	async authenticate(email, password) {
@@ -20,8 +19,9 @@ class userRepository {
 	}
 
 	async create(data) {
+		const { password, email, name } = data;
 		const id = await this._base.getSequence('id_seq_user');
-		return this._base.create({ ...data, id });
+		return this._base.create({ password, email, name, id });
 	}
 
 	async update(entity, where) {

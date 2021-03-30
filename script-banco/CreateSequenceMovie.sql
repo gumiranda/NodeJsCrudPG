@@ -1,4 +1,4 @@
-CREATE SEQUENCE api.id_seq_movie
+CREATE SEQUENCE id_seq_movie
 INCREMENT 1
 START 1;
 

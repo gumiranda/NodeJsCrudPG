@@ -1,4 +1,4 @@
-CREATE SEQUENCE api.id_seq_location
+CREATE SEQUENCE id_seq_location
 INCREMENT 1
 START 1;
 
