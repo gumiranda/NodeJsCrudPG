@@ -65,7 +65,7 @@ userController.prototype.put = async (req, res) => {
 				`Já existe o email ${req.body.email} cadastrado no banco de dados`,
 			);
 		}
-		if (req.usuarioLogado.user._id.toString() === req.params.id) {
+		if (req.userLogged.user._id.toString() === req.params.id) {
 			ctrlBase.put(_repo, validationContract, req, res);
 		} else {
 			res.status(401).send({ message: 'Você não tem permissão' });

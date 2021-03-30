@@ -8,10 +8,6 @@ const variables = {
 	Security: {
 		secretKey: process.env.secretKey,
 	},
-	Pagarme: {
-		pagarmeKey: process.env.pagarme,
-		pagarmeKeyTest: process.env.pagarmetest,
-	},
 };
 
 module.exports = variables;
