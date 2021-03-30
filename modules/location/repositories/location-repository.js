@@ -1,8 +1,8 @@
 const base = require('../../../bin/base/repository-base');
 
-class movieRepository {
+class locationRepository {
 	constructor() {
-		this._base = new base('tb_Movie');
+		this._base = new base('tb_Location');
 	}
 
 	get(any) {
@@ -10,9 +10,9 @@ class movieRepository {
 	}
 
 	async create(data) {
-		const { quantity, title, director } = data;
-		const id = await this._base.getSequence('id_seq_movie');
-		return this._base.create({ quantity, title, director, id });
+		const { userid, movieid } = data;
+		const id = await this._base.getSequence('id_seq_location');
+		return this._base.create({ userid, movieid, id });
 	}
 
 	async update(entity, where) {
@@ -28,4 +28,4 @@ class movieRepository {
 	}
 }
 
-module.exports = movieRepository;
+module.exports = locationRepository;

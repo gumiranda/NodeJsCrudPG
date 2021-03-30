@@ -8,7 +8,7 @@ const bodyParser = require('body-parser');
 // ROTAS
 const userRouter = require('./modules/user/routes/user-router');
 const movieRouter = require('./modules/movie/routes/movie-router');
-//const locationRouter = require('./modules/location/routes/location-router');
+const locationRouter = require('./modules/location/routes/location-router');
 
 const app = express();
 const server = require('http').Server(app);
@@ -32,6 +32,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/api/user', userRouter);
 app.use('/api/movie', movieRouter);
+app.use('/api/location', locationRouter);
 
 const port = process.env.PORT || 3333;
 
