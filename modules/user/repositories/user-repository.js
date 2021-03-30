@@ -7,9 +7,9 @@ class userRepository {
 		this._projection = 'nome email payDay type cpf phone';
 	}
 
-	async authenticate(email, senha) {
+	async authenticate(email, password) {
 		const user = await this._base.getByAny({ email });
-		if (await bcrypt.compareSync(senha, user.senha)) {
+		if (await bcrypt.compareSync(password, user.password)) {
 			return user;
 		}
 		return null;
@@ -20,7 +20,7 @@ class userRepository {
 	}
 
 	async create(data) {
-		const id = await this._base.getSequence('api.id_user');
+		const id = await this._base.getSequence('id_seq_user');
 		return this._base.create({ ...data, id });
 	}
 

@@ -1,3 +1,4 @@
+/* eslint-disable new-cap */
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const repository = require('../repositories/user-repository');
@@ -13,14 +14,14 @@ userController.prototype.post = async (req, res) => {
 	const validationContract = new validation();
 	validationContract.isRequired(req.body.nome, 'Informe seu nome');
 	validationContract.isRequired(req.body.email, 'Informe seu email');
-	validationContract.isRequired(req.body.senha, 'Informe sua senha');
+	validationContract.isRequired(req.body.password, 'Informe sua password');
 	validationContract.isRequired(
-		req.body.senhaConfirmacao,
-		'Informe sua senha confirmação ',
+		req.body.passwordConfirmation,
+		'Informe sua password confirmação ',
 	);
 	validationContract.isTrue(
-		req.body.senhaConfirmacao !== req.body.senha,
-		'As senhas devem ser iguais ',
+		req.body.passwordConfirmation !== req.body.password,
+		'As passwords devem ser iguais ',
 	);
 	validationContract.isEmail(req.body.email, 'Informe um email válido ');
 
@@ -28,12 +29,12 @@ userController.prototype.post = async (req, res) => {
 		const usuarioEmailExiste = await _repo.EmailExists(req.body.email);
 		if (usuarioEmailExiste) {
 			validationContract.isTrue(
-				usuarioEmailExiste.nome != undefined,
+				usuarioEmailExiste.nome !== undefined,
 				`Já existe o email ${req.body.email} cadastrado no banco de dados`,
 			);
 		}
 		const salt = await bcrypt.genSaltSync(10);
-		req.body.senha = await bcrypt.hashSync(req.body.senha, salt);
+		req.body.password = await bcrypt.hashSync(req.body.password, salt);
 		ctrlBase.post(_repo, validationContract, req, res);
 	} catch (e) {
 		res.status(500).send({ message: 'Internal server error', error: e });
@@ -44,14 +45,14 @@ userController.prototype.put = async (req, res) => {
 	validationContract.isRequired(req.body.nome, 'Informe seu nome ');
 	validationContract.isRequired(req.params.id, 'Informe seu id ');
 	validationContract.isRequired(req.body.email, 'Informe seu email ');
-	validationContract.isRequired(req.body.senha, 'Informe sua senha ');
+	validationContract.isRequired(req.body.password, 'Informe sua password ');
 	validationContract.isRequired(
-		req.body.senhaConfirmacao,
-		'Informe sua senha confirmação ',
+		req.body.passwordConfirmation,
+		'Informe sua password confirmação ',
 	);
 	validationContract.isTrue(
-		req.body.senhaConfirmacao !== req.body.senha,
-		'As senhas devem ser iguais ',
+		req.body.passwordConfirmation !== req.body.password,
+		'As passwords devem ser iguais ',
 	);
 	validationContract.isEmail(req.body.email, 'Informe um email válido ');
 
@@ -59,8 +60,8 @@ userController.prototype.put = async (req, res) => {
 		const usuarioEmailExiste = await _repo.EmailExists(req.body.email);
 		if (usuarioEmailExiste) {
 			validationContract.isTrue(
-				usuarioEmailExiste.nome != undefined &&
-					usuarioEmailExiste._id != req.params.id,
+				usuarioEmailExiste.nome !== undefined &&
+					usuarioEmailExiste._id !== req.params.id,
 				`Já existe o email ${req.body.email} cadastrado no banco de dados`,
 			);
 		}
@@ -85,14 +86,14 @@ userController.prototype.delete = async (req, res) => {
 userController.prototype.authenticate = async (req, res) => {
 	const validationContract = new validation();
 	validationContract.isRequired(req.body.email, 'Informe seu email ');
-	validationContract.isRequired(req.body.senha, 'Informe sua senha ');
+	validationContract.isRequired(req.body.password, 'Informe sua password ');
 	validationContract.isRequired(
-		req.body.senhaConfirmacao,
-		'Informe sua senha confirmação ',
+		req.body.passwordConfirmation,
+		'Informe sua password confirmação ',
 	);
 	validationContract.isTrue(
-		req.body.senhaConfirmacao !== req.body.senha,
-		'As senhas devem ser iguais ',
+		req.body.passwordConfirmation !== req.body.password,
+		'As passwords devem ser iguais ',
 	);
 	validationContract.isEmail(req.body.email, 'Informe um email válido ');
 	if (!validationContract.isValid()) {
@@ -104,13 +105,13 @@ userController.prototype.authenticate = async (req, res) => {
 	}
 	const usuarioEncontrado = await _repo.authenticate(
 		req.body.email,
-		req.body.senha,
+		req.body.password,
 		false,
 	);
 	if (usuarioEncontrado == null) {
 		res
 			.status(404)
-			.send({ message: 'Usuario ou senha informados são inválidos' });
+			.send({ message: 'Usuario ou password informados são inválidos' });
 	}
 	if (usuarioEncontrado) {
 		res.status(200).send({
@@ -123,7 +124,7 @@ userController.prototype.authenticate = async (req, res) => {
 	} else {
 		res
 			.status(404)
-			.send({ message: 'Usuario ou senha informados são inválidos' });
+			.send({ message: 'Usuario ou password informados são inválidos' });
 	}
 };
 
