@@ -45,14 +45,13 @@ class locationRepository {
 			if (!resUpdate || !resUpdate.rowCount || resUpdate.rowCount < 1) {
 				return null;
 			}
-		} else if (entity && entity.status_location === 0) {
-			return null;
+			const updated = await this._base.update(entity, where);
+			if (!updated) {
+				return null;
+			}
+			return this._base.get(where);
 		}
-		const updated = await this._base.update(entity, where);
-		if (!updated) {
-			return null;
-		}
-		return this._base.get(where);
+		return null;
 	}
 
 	delete(id) {
