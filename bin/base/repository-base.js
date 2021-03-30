@@ -9,6 +9,9 @@ class baseRepository {
 	create(data) {
 		return this._model.save(data, pool);
 	}
+	query(sql, listValue) {
+		return pool.query(sql, listValue);
+	}
 
 	update(entity, where) {
 		return this._model.update(entity, where, pool);

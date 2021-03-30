@@ -8,6 +8,9 @@ class movieRepository {
 	get(any) {
 		return this._base.get(any);
 	}
+	getAvailable(sql, listValue) {
+		return this._base.query(sql, listValue);
+	}
 
 	async create(data) {
 		const { quantity, title, director } = data;

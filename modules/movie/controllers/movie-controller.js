@@ -9,7 +9,6 @@ function movieController() {}
 
 movieController.prototype.post = async (req, res) => {
 	const validationContract = new validation();
-	validationContract.isRequired(req.body.quantity, 'Informe o campo quantity');
 	validationContract.isRequired(req.body.title, 'Informe o campo title');
 	validationContract.isRequired(req.body.director, 'Informe o campo director');
 
@@ -36,6 +35,22 @@ movieController.prototype.put = async (req, res) => {
 
 movieController.prototype.get = async (req, res) => {
 	ctrlBase.get(_repo, req, res);
+};
+movieController.prototype.getAvailable = async (req, res) => {
+	try {
+		const {
+			rows,
+		} = await _repo.getAvailable('SELECT * FROM TB_MOVIE WHERE quantity > $1', [
+			0,
+		]);
+		if (!rows) {
+			res.status(400).send({ message: 'Não foi possível retornar os filmes' });
+			return;
+		}
+		res.status(200).send(rows);
+	} catch (e) {
+		res.status(500).send({ message: e.toString() });
+	}
 };
 
 movieController.prototype.delete = async (req, res) => {
