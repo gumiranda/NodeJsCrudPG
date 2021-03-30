@@ -22,6 +22,7 @@ CREATE TABLE tb_Location
 (
 	id integer NOT NULL,    
 	userId integer NOT NULL,    
+	status_location integer NOT NULL, -- 0 locado e 1 devolvido   
 	movieId integer NOT NULL
 	)
 ;

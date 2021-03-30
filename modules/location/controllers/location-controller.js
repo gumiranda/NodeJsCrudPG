@@ -10,27 +10,25 @@ function locationController() {}
 
 locationController.prototype.post = async (req, res) => {
 	const validationContract = new validation();
-	validationContract.isRequired(req.body.userid, 'Informe o campo userid');
 	validationContract.isRequired(req.body.movieid, 'Informe o campo movieid');
-
+	req.body.userid = req.userLogged.user.id;
 	try {
 		ctrlBase.post(_repo, validationContract, req, res);
 	} catch (e) {
 		res
 			.status(500)
-			.send({ message: 'Internal server error', error: e.toString() });
+			.json({ message: 'Internal server error', error: e.toString() });
 	}
 };
 locationController.prototype.put = async (req, res) => {
 	const validationContract = new validation();
 	validationContract.isRequired(req.params.id, 'Informe seu id ');
-
 	try {
 		ctrlBase.put(_repo, validationContract, req, res);
 	} catch (e) {
 		res
 			.status(500)
-			.send({ message: 'Internal server error', error: e.toString() });
+			.json({ message: 'Internal server error', error: e.toString() });
 	}
 };
 

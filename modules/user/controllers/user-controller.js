@@ -39,7 +39,7 @@ userController.prototype.post = async (req, res) => {
 	} catch (e) {
 		res
 			.status(500)
-			.send({ message: 'Internal server error', error: e.toString() });
+			.json({ message: 'Internal server error', error: e.toString() });
 	}
 };
 userController.prototype.put = async (req, res) => {
@@ -60,12 +60,12 @@ userController.prototype.put = async (req, res) => {
 		if (req.userLogged.user.id.toString() === req.params.id) {
 			ctrlBase.put(_repo, validationContract, req, res);
 		} else {
-			res.status(401).send({ message: 'Você não tem permissão' });
+			res.status(401).json({ message: 'Você não tem permissão' });
 		}
 	} catch (e) {
 		res
 			.status(500)
-			.send({ message: 'Internal server error', error: e.toString() });
+			.json({ message: 'Internal server error', error: e.toString() });
 	}
 };
 
@@ -91,7 +91,7 @@ userController.prototype.authenticate = async (req, res) => {
 	);
 	validationContract.isEmail(req.body.email, 'Informe um email válido ');
 	if (!validationContract.isValid()) {
-		res.status(400).send({
+		res.status(400).json({
 			message: 'Não foi possível efetuar o login',
 			validation: validationContract.errors(),
 		});
@@ -105,10 +105,10 @@ userController.prototype.authenticate = async (req, res) => {
 	if (usuarioEncontrado == null) {
 		res
 			.status(404)
-			.send({ message: 'Usuario ou password informados são inválidos' });
+			.json({ message: 'Usuario ou password informados são inválidos' });
 	}
 	if (usuarioEncontrado) {
-		res.status(200).send({
+		res.status(200).json({
 			usuario: usuarioEncontrado,
 			token: jwt.sign(
 				{ user: usuarioEncontrado },
@@ -118,7 +118,7 @@ userController.prototype.authenticate = async (req, res) => {
 	} else {
 		res
 			.status(404)
-			.send({ message: 'Usuario ou password informados são inválidos' });
+			.json({ message: 'Usuario ou password informados são inválidos' });
 	}
 };
 

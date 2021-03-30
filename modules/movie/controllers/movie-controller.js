@@ -17,7 +17,7 @@ movieController.prototype.post = async (req, res) => {
 	} catch (e) {
 		res
 			.status(500)
-			.send({ message: 'Internal server error', error: e.toString() });
+			.json({ message: 'Internal server error', error: e.toString() });
 	}
 };
 movieController.prototype.put = async (req, res) => {
@@ -29,7 +29,7 @@ movieController.prototype.put = async (req, res) => {
 	} catch (e) {
 		res
 			.status(500)
-			.send({ message: 'Internal server error', error: e.toString() });
+			.json({ message: 'Internal server error', error: e.toString() });
 	}
 };
 
@@ -38,18 +38,21 @@ movieController.prototype.get = async (req, res) => {
 };
 movieController.prototype.getAvailable = async (req, res) => {
 	try {
-		const {
-			rows,
-		} = await _repo.getAvailable('SELECT * FROM TB_MOVIE WHERE quantity > $1', [
-			0,
-		]);
+		const { title } = req.query;
+		let sql = 'SELECT * FROM TB_MOVIE WHERE quantity > $1';
+		let listValue = [0];
+		if (title) {
+			sql += ' AND title=$2';
+			listValue.push(title);
+		}
+		const { rows } = await _repo.getAvailable(sql, listValue);
 		if (!rows) {
-			res.status(400).send({ message: 'Não foi possível retornar os filmes' });
+			res.status(400).json({ message: 'Não foi possível retornar os filmes' });
 			return;
 		}
-		res.status(200).send(rows);
+		res.status(200).json(rows);
 	} catch (e) {
-		res.status(500).send({ message: e.toString() });
+		res.status(500).json({ message: e.toString() });
 	}
 };
 

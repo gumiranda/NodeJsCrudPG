@@ -4,7 +4,7 @@ exports.post = async (repository, validationContract, req, res) => {
 		if (!validationContract.isValid()) {
 			res
 				.status(400)
-				.send({
+				.json({
 					message: 'Existem dados inválidos na sua requisição',
 					validation: validationContract.errors(),
 				})
@@ -12,11 +12,20 @@ exports.post = async (repository, validationContract, req, res) => {
 			return;
 		}
 		const resultado = await repository.create(data);
-		res.status(201).send(resultado);
+		if (!resultado) {
+			res
+				.status(400)
+				.json({ message: 'Não foi possível inserir o registro' })
+				.end();
+			return;
+		}
+		res.status(201).json(resultado);
 	} catch (e) {
 		res
 			.status(500)
-			.send({ message: 'Internal server error', error: e.toString() });
+			.json({ message: 'Internal server error', error: e.toString() })
+			.end();
+		return;
 	}
 };
 
@@ -26,7 +35,7 @@ exports.put = async (repository, validationContract, req, res) => {
 		if (!validationContract.isValid()) {
 			res
 				.status(400)
-				.send({
+				.json({
 					message: 'Existem dados inválidos na sua requisição',
 					validation: validationContract.errors(),
 				})
@@ -34,21 +43,39 @@ exports.put = async (repository, validationContract, req, res) => {
 			return;
 		}
 		const resultado = await repository.update(data, { id: req.params.id });
-		res.status(202).send(resultado);
+		if (!resultado) {
+			res
+				.status(400)
+				.json({ message: 'Não foi possível atualizar o registro' })
+				.end();
+			return;
+		}
+		res.status(202).json(resultado);
 	} catch (e) {
 		res
 			.status(500)
-			.send({ message: 'Internal server error', error: e.toString() });
+			.json({ message: 'Internal server error', error: e.toString() })
+			.end();
+		return;
 	}
 };
 exports.get = async (repository, req, res) => {
 	try {
 		const resultado = await repository.get(req.query || {});
-		res.status(200).send(resultado);
+		if (!resultado) {
+			res
+				.status(400)
+				.json({ message: 'Não foi possível obter os registros' })
+				.end();
+			return;
+		}
+		res.status(200).json(resultado);
 	} catch (e) {
 		res
 			.status(500)
-			.send({ message: 'Erro no processamento', error: e.toString() });
+			.json({ message: 'Erro no processamento', error: e.toString() })
+			.end();
+		return;
 	}
 };
 
@@ -58,16 +85,23 @@ exports.delete = async (repository, req, res) => {
 		if (id) {
 			const resultado = await repository.delete(id);
 			if (resultado !== 'Operação Inválida') {
-				res.status(200).send({ message: 'Registro excluído com sucesso' });
+				res.status(200).json({ message: 'Registro excluído com sucesso' });
 			} else {
-				res.status(401).send({ message: 'Operação inválida' });
+				res.status(401).json({ message: 'Operação inválida' }).end();
+				return;
 			}
 		} else {
-			res.status(500).send({ message: 'O parametro id precisa ser informado' });
+			res
+				.status(500)
+				.json({ message: 'O parametro id precisa ser informado' })
+				.end();
+			return;
 		}
 	} catch (e) {
 		res
 			.status(500)
-			.send({ message: 'Internal server error', error: e.toString() });
+			.json({ message: 'Internal server error', error: e.toString() })
+			.end();
+		return;
 	}
 };
